@@ -305,9 +305,22 @@
         async function loadNote(fileName) {
             try {
                 document.getElementById('loading').style.display = 'flex';
-                const response = await fetch(fileName);
-                if (!response.ok) throw new Error("File not found");
-                let text = await response.text();
+
+                // Usamos a URL RAW do GitHub para evitar problemas de encoding (acentos/espaços) que ocorrem em servidores estáticos
+                const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${encodeURIComponent(fileName)}`;
+
+                console.log("Tentando carregar nota de:", rawUrl); // Log para debug
+
+                const response = await fetch(rawUrl);
+                if (!response.ok) {
+                    // Fallback: Tenta buscar na raiz relativa caso o RAW falhe (ex: fork ou repo privado)
+                    console.log("Falha no RAW, tentando local...");
+                    const localResponse = await fetch(encodeURIComponent(fileName));
+                    if (!localResponse.ok) throw new Error("Arquivo não encontrado nem no RAW nem localmente.");
+                    var text = await localResponse.text();
+                } else {
+                    var text = await response.text();
+                }
 
                 // 1. Processar Callouts [!INFO], [!ERROR], etc.
                 text = text.replace(/>\s?\[!(\w+)\](.*?)\n((?:>.*\n?)*)/g, (match, type, title, content) => {
