@@ -369,12 +369,13 @@
                 });
 
                 // 2. Extrair e Criar Iframe do YouTube (Sticky Manual)
-                const ytMatch = text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+                // Regex ajustado para ser robusto com parametros extras (&source=...) e variações de URL
+                const ytMatch = text.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
 
                 const videoAnchor = document.getElementById('video-anchor');
                 videoAnchor.innerHTML = '';
 
-                if (ytMatch) {
+                if (ytMatch && ytMatch[1]) {
                     const videoId = ytMatch[1];
                     const wrapper = document.createElement('div');
                     wrapper.className = 'sticky-video-wrapper';
