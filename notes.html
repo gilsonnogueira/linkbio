@@ -393,7 +393,8 @@
 
                 // 4. Timestamps
                 const contentWithTimestamps = purified.replace(/\b(\d{1,2}:)?\d{1,2}:\d{2}\b/g, (match) => {
-                    return `<span class="timestamp" onclick="seekVideo('${match}')">${match}</span>`;
+                    // Adicionado preventDefault e stopPropagation para evitar que links pais (<a>) abram novas abas
+                    return `<span class="timestamp" onclick="event.preventDefault(); event.stopPropagation(); seekVideo('${match}')">${match}</span>`;
                 });
 
                 document.getElementById('note-body').innerHTML = contentWithTimestamps;
