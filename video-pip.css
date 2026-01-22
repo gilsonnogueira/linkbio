@@ -1,0 +1,139 @@
+/* 🎥 VIDEO GLASS CLEAN V6 (Correção Anti-PDF e Anti-Imagens)
+   Autor: Adaptado para Gilson Nogueira (TJCE)
+
+   Funcionalidade:
+   - Sticky Video: Gruda vídeos no topo (Youtube, Drive, MP4).
+   - Ignora estritamente PDFs e Imagens: ![[imagem.png]] e ![[doc.pdf]] não serão afetados.
+   - PC: Miniatura translúcida que expande com o mouse.
+   - Mobile: Barra fixa no topo.
+*/
+
+/* --- ATIVAÇÃO ---
+   cssclasses: video-glass
+*/
+
+/* ==========================================================================
+   1. O CONTAINER (A Faixa Sticky) - SELETOR EXCLUSIVO PARA VÍDEO
+   ========================================================================== */
+
+/* A Lógica do Seletor:
+   Garanta que a linha contém um iframe ou vídeo, e explicitamente NÃO contém imagens ou PDFs.
+*/
+.video-glass .cm-content>.cm-line:has(iframe, video):not(:has(img)):not(:has(.pdf-embed)):not(:has([src$=".pdf"])),
+.video-glass .markdown-preview-section>div:has(iframe, video):not(:has(img)):not(:has(.pdf-embed)):not(:has([src$=".pdf"])) {
+
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    top: 0 !important;
+    z-index: 100;
+
+    /* Vidro Fosco Suave */
+    background: rgba(var(--mono-rgb-0), 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-bottom: 1px solid rgba(var(--interactive-accent-rgb), 0.3);
+
+    width: 100%;
+    margin: 0 !important;
+    padding: 10px 0 !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: all 0.3s ease;
+}
+
+/* Regra para o elemento em si (iframe ou video) */
+.video-glass iframe,
+.video-glass video {
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: none !important;
+    display: block;
+    aspect-ratio: 16/9;
+    height: auto !important;
+    background: transparent;
+}
+
+/* ==========================================================================
+   2. COMPORTAMENTO NO PC (Miniatura -> Cinema)
+   ========================================================================== */
+@media (min-width: 769px) {
+
+    /* ESTADO REPOUSO (Miniatura) */
+    .video-glass .cm-content>.cm-line:has(iframe, video):not(:has(img)):not(:has(.pdf-embed)):not(:has([src$=".pdf"])),
+    .video-glass .markdown-preview-section>div:has(iframe, video):not(:has(img)):not(:has(.pdf-embed)):not(:has([src$=".pdf"])) {
+        padding: 5px 0 !important;
+        background: rgba(var(--mono-rgb-0), 0.2);
+        /* Bem transparente */
+        backdrop-filter: blur(5px);
+    }
+
+    .video-glass iframe,
+    .video-glass video {
+        width: 300px !important;
+        /* Pequeno */
+        opacity: 0.85;
+        transition: all 0.4s ease;
+    }
+
+    /* ESTADO HOVER (Expande) */
+    .video-glass .cm-content>.cm-line:has(iframe, video):hover,
+    .video-glass .markdown-preview-section>div:has(iframe, video):hover {
+        padding: 20px 0 !important;
+        background: rgba(var(--mono-rgb-0), 0.95);
+        backdrop-filter: blur(20px);
+        z-index: 200;
+    }
+
+    .video-glass .cm-content>.cm-line:has(iframe, video):hover :is(iframe, video),
+    .video-glass .markdown-preview-section>div:has(iframe, video):hover :is(iframe, video) {
+        width: 800px !important;
+        /* Grande */
+        opacity: 1;
+        transform: scale(1.02);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* ==========================================================================
+   3. COMPORTAMENTO MOBILE
+   ========================================================================== */
+@media (max-width: 768px) {
+
+    .video-glass .cm-content>.cm-line:has(iframe, video):not(:has(img)):not(:has(.pdf-embed)),
+    .video-glass .markdown-preview-section>div:has(iframe, video):not(:has(img)):not(:has(.pdf-embed)) {
+        padding: 5px 0 !important;
+        top: 0;
+    }
+
+    .video-glass iframe,
+    .video-glass video {
+        width: 100% !important;
+        border-radius: 0;
+        max-width: 100%;
+    }
+}
+
+/* ==========================================================================
+   4. SEGURANÇA EXTRA ANTI-PDF E ANTI-IMAGENS
+   ========================================================================== */
+/* Garante que imagens e PDFs fiquem estáticos e normais, sobrepondo qualquer regra anterior */
+.video-glass .internal-embed:has(img),
+.video-glass .internal-embed.pdf-embed,
+.video-glass .internal-embed[src$=".pdf"],
+.video-glass .image-embed {
+    position: static !important;
+    background: transparent !important;
+    width: auto !important;
+    /* Permite que o PDF assuma o tamanho definido em outro lugar */
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    backdrop-filter: none !important;
+    border-bottom: none !important;
+    display: block !important;
+    /* Retoma o block normal */
+}

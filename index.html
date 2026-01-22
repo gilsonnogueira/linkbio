@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gilson Nogueira | Link na Bio</title>
+    <meta name="description"
+        content="Página de links de Gilson Nogueira - Futuro Analista TJCE, focado em Automação & IA.">
+
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Outfit para um ar moderno e premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --neon-blue: #00f3ff;
+            --neon-hover: #00c4cc;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            /* Efeito de brilho de fundo sutil */
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(0, 243, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Foto de Perfil com brilho neon */
+        .profile-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+            transition: var(--transition-speed);
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Tipografia */
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Links Estilizados como Cards */
+        .links-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .link-card i {
+            position: absolute;
+            left: 24px;
+            font-size: 1.3rem;
+            color: var(--neon-blue);
+            transition: var(--transition-speed);
+        }
+
+        .link-card:hover {
+            background: rgba(0, 243, 255, 0.08);
+            border-color: var(--neon-blue);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 243, 255, 0.2);
+            color: #fff;
+        }
+
+        .link-card:hover i {
+            transform: scale(1.2);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        /* Efeito de foco para acessibilidade */
+        .link-card:focus-visible {
+            outline: 2px solid var(--neon-blue);
+            outline-offset: 4px;
+        }
+
+        /* Rodapé sutil */
+        footer {
+            margin-top: 60px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        footer strong {
+            color: var(--neon-blue);
+            font-weight: 400;
+        }
+
+        /* Animações */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+        <!-- Perfil -->
+        <header class="profile-container">
+            <img src="photo_2025-12-23_11-26-28.jpg" alt="Foto de Gilson Nogueira" class="profile-img"
+                onerror="this.src='https://ui-avatars.com/api/?name=Gilson+Nogueira&background=121212&color=00f3ff&size=120'">
+            <h1>Gilson Nogueira</h1>
+        </header>
+
+        <!-- Navegação de Links -->
+        <nav class="links-wrapper" role="navigation">
+            <a href="https://www.youtube.com/@Prof.GilsonNogueira" class="link-card" target="_blank"
+                rel="noopener noreferrer" aria-label="Acesse meu Canal no YouTube">
+                <i class="fab fa-youtube"></i>
+                Youtube
+            </a>
+
+            <a href="notes.html" class="link-card" aria-label="Acesse minhas Anotações">
+                <i class="fas fa-book-open"></i>
+                Anotações
+            </a>
+
+            <a href="https://instagram.com/_gilson.nogueira_" class="link-card" target="_blank"
+                rel="noopener noreferrer" aria-label="Siga-me no Instagram">
+                <i class="fab fa-instagram"></i>
+                Instagram
+            </a>
+
+            <a href="https://t.me/gil_nogueira" class="link-card" target="_blank" rel="noopener noreferrer"
+                aria-label="Fale comigo no Telegram">
+                <i class="fab fa-telegram"></i>
+                Telegram
+            </a>
+
+            <a href="https://github.com/gilsonnogueira" class="link-card" target="_blank" rel="noopener noreferrer"
+                aria-label="Confira meus projetos no GitHub">
+                <i class="fab fa-github"></i>
+                Meus Projetos
+            </a>
+        </nav>
+
+        <!-- Footer -->
+        <footer>
+            <p>Construído por <strong>Gilson Nogueira</strong> &copy; 2026</p>
+            </section>
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+/* --- 💎 Diamond Standard: Mermaid & Image Visual Enhancements --- */
+
+/* 1. Melhoria para Diagramas Mermaid */
+.mermaid {
+    display: flex;
+    justify-content: center;
+    background-color: transparent !important;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.mermaid svg {
+    max-width: 100% !important;
+    height: auto !important;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.markdown-preview-view .mermaid {
+    max-width: 100%;
+}
+
+/* 2. Melhoria para Imagens */
+.markdown-rendered img:not(.emoji):not(.twemoji) {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+    max-width: 100%;
+}
+
+.markdown-rendered img:not(.emoji):not(.twemoji):hover {
+    transform: scale(1.02);
+    cursor: zoom-in;
+}
+
+/* 3. Ajuste para Callouts */
+.callout-content {
+    overflow-x: auto;
+}
+
+/* 4. PDF EMBED AJUSTADO (Scoped para Slides com #page=X) 📐 */
+/* Aplica restrições APENAS quando o arquivo tem "Slide" no nome E uma página específica definida */
+
+.internal-embed[src*=".pdf"][src*="#page"][src*="Slide"],
+.internal-embed[src*=".pdf"][src*="#page"][src*="slide"] {
+    width: 85% !important;
+    height: auto !important;
+    aspect-ratio: 1.65 !important;
+    display: block !important;
+    margin: 0 auto;
+    overflow: hidden !important;
+    /* Corta a próxima página apenas no embed de slide */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.internal-embed[src*=".pdf"][src*="#page"][src*="Slide"] .pdf-embed-container,
+.internal-embed[src*=".pdf"][src*="#page"][src*="Slide"] .pdf-container,
+.internal-embed[src*=".pdf"][src*="#page"][src*="Slide"] .pdf-viewer-container,
+.internal-embed[src*=".pdf"][src*="#page"][src*="slide"] .pdf-embed-container,
+.internal-embed[src*=".pdf"][src*="#page"][src*="slide"] .pdf-container,
+.internal-embed[src*=".pdf"][src*="#page"][src*="slide"] .pdf-viewer-container {
+    height: 100% !important;
+    width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Oculta a barra de ferramentas (toolbar) APENAS nestes casos */
+.internal-embed[src*=".pdf"][src*="#page"][src*="Slide"] .pdf-toolbar,
+.internal-embed[src*=".pdf"][src*="#page"][src*="slide"] .pdf-toolbar {
+    display: none !important;
+}
+
+/* Ajusta a margem superior para compensar a remoção da toolbar, se necessário */
+.internal-embed[src*=".pdf"][src*="#page"][src*="Slide"] .pdf-viewer-container,
+.internal-embed[src*=".pdf"][src*="#page"][src*="slide"] .pdf-viewer-container {
+    margin-top: 0 !important;
+}
+
+/* Garante que o canvas do PDF se ajuste */
+.internal-embed[src*=".pdf"][src*="#page"][src*="Slide"] canvas,
+.internal-embed[src*=".pdf"][src*="#page"][src*="slide"] canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    object-position: top;
+}

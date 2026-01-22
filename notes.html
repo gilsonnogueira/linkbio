@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gilson Nogueira | Anotações</title>
+
+    <!-- Libs Externas -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS do Projeto -->
+    <link rel="stylesheet" href="video-pip.css">
+    <link rel="stylesheet" href="visual-enhancements.css">
+    <link rel="stylesheet" href="visual-biblia.css">
+
+    <style>
+        :root {
+            /* Variáveis de Cores (Paleta do Site) */
+            --bg-dark: #121212;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --neon-blue: #00f3ff;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+
+            /* Simulação de Variáveis Obsidian para compatibilidade com os CSS do usuário */
+            --mono-rgb-0: 18, 18, 18;
+            --interactive-accent-rgb: 0, 243, 255;
+            --background-modifier-border: rgba(255, 255, 255, 0.1);
+            --font-monospace: 'Courier New', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* Header fixo */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(18, 18, 18, 0.9);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: 0.3s;
+            background: var(--card-bg);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .back-btn:hover {
+            color: var(--neon-blue);
+            border-color: var(--neon-blue);
+            transform: translateX(-5px);
+        }
+
+        #page-title {
+            font-weight: 700;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Container de Conteúdo */
+        #content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Lista de Notas (Página Principal das Anotações) */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .note-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        .note-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.1);
+        }
+
+        .note-card i {
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+        }
+
+        .note-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* --- Customização do Markdown (Estilo Obsidian) --- */
+        .markdown-rendered {
+            padding-bottom: 100px;
+        }
+
+        .markdown-rendered h1,
+        .markdown-rendered h2,
+        .markdown-rendered h3 {
+            margin: 1.5em 0 0.5em;
+            color: #fff;
+        }
+
+        .markdown-rendered p {
+            margin-bottom: 1em;
+        }
+
+        /* Timestamps */
+        .timestamp {
+            background: rgba(0, 243, 255, 0.15);
+            color: var(--neon-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 2px solid var(--neon-blue);
+            transition: 0.2s;
+        }
+
+        .timestamp:hover {
+            background: var(--neon-blue);
+            color: #000;
+        }
+
+        /* Callouts (Estilo Obsidian Simplificado) */
+        .callout {
+            margin: 1em 0;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--neon-blue);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .callout-title {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* Adaptação para o vídeo flutuante (conforme video-pip.css) */
+        .video-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #loading {
+            text-align: center;
+            padding: 100px;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        /* Checkboxes */
+        input[type="checkbox"] {
+            accent-color: var(--neon-blue);
+            margin-right: 8px;
+        }
+
+        /* Ajuste do Iframe para o CSS do usuário */
+        .video-glass .markdown-preview-section>div {
+            /* Classe que o script vai injetar para ativar o sticky do video-pip.css */
+        }
+    </style>
+</head>
+
+<body class="video-glass">
+
+    <header>
+        <a href="index.html" id="nav-action" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        <div id="page-title">Anotações</div>
+        <div style="width: 100px;"></div> <!-- Spacer -->
+    </header>
+
+    <main id="content">
+        <div id="loading"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>
+
+        <!-- Grid de Notas -->
+        <div id="note-list" class="notes-grid" style="display: none;"></div>
+
+        <!-- Renderização da Nota -->
+        <div id="note-render" class="markdown-rendered markdown-preview-view" style="display: none;">
+            <div id="video-anchor" class="markdown-preview-section"></div>
+            <div id="note-body"></div>
+        </div>
+    </main>
+
+    <script>
+        let player;
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentFile = urlParams.get('file');
+
+        // Configuração do Marked para suportar Callouts e Checkboxes
+        marked.use({
+            renderer: {
+                listitem(text, task, checked) {
+                    if (task) {
+                        return `<li style="list-style: none;">
+                            <input type="checkbox" ${checked ? 'checked' : ''} disabled> ${text}
+                        </li>`;
+                    }
+                    return `<li>${text}</li>`;
+                }
+            }
+        });
+
+        async function init() {
+            if (currentFile) {
+                await loadNote(currentFile);
+            } else {
+                await listNotes();
+            }
+        }
+
+        const REPO_OWNER = 'gilsonnogueira';
+        const REPO_NAME = 'linkbio';
+        const API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/`;
+
+        async function listNotes() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error("API Error");
+                const files = await response.json();
+
+                const noteList = document.getElementById('note-list');
+                const mdFiles = files.filter(f => f.name.endsWith('.md') && f.name !== 'README.md');
+
+                if (mdFiles.length === 0) {
+                    noteList.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Nenhuma nota encontrada no repositório.</p>';
+                } else {
+                    noteList.innerHTML = mdFiles.map(f => `
+                        <a href="?file=${encodeURIComponent(f.name)}" class="note-card">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>${f.name.replace('.md', '')}</h3>
+                            <small style="color: var(--text-muted)">Clique para abrir</small>
+                        </a>
+                    `).join('');
+                }
+
+                document.getElementById('loading').style.display = 'none';
+                noteList.style.display = 'grid';
+            } catch (e) {
+                console.error(e);
+                document.getElementById('loading').innerHTML = "<h1>Erro ao conectar com o GitHub API. Verifique as configurações.</h1>";
+            }
+        }
+
+        async function loadNote(fileName) {
+            try {
+                document.getElementById('loading').style.display = 'flex';
+                const response = await fetch(fileName);
+                if (!response.ok) throw new Error("File not found");
+                let text = await response.text();
+
+                // 1. Processar Callouts [!INFO], [!ERROR], etc.
+                text = text.replace(/>\s?\[!(\w+)\](.*?)\n((?:>.*\n?)*)/g, (match, type, title, content) => {
+                    const cleanContent = content.replace(/^>\s?/gm, '');
+                    return `<div class="callout callout-${type.toLowerCase()}">
+                        <div class="callout-title"><i class="fas fa-info-circle"></i> ${title || type}</div>
+                        <div class="callout-content">${marked.parse(cleanContent)}</div>
+                    </div>`;
+                });
+
+                // 2. Extrair e Criar Iframe do YouTube (para o Sticky do video-pip.css)
+                const ytMatch = text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+                if (ytMatch) {
+                    const videoId = ytMatch[1];
+                    const videoDiv = document.createElement('div');
+                    // Esta estrutura atende o seletor do video-pip.css
+                    videoDiv.innerHTML = `<div id="youtube-player"></div>`;
+                    document.getElementById('video-anchor').appendChild(videoDiv);
+
+                    initYoutube(videoId);
+                }
+
+                // 3. Renderizar Markdown principal
+                const html = marked.parse(text);
+                const purified = DOMPurify.sanitize(html);
+
+                // 4. Transformar timestamps (00:00 ou 0:00:00) em links clicáveis
+                const contentWithTimestamps = purified.replace(/\b(\d{1,2}:)?\d{1,2}:\d{2}\b/g, (match) => {
+                    return `<span class="timestamp" onclick="seekVideo('${match}')">${match}</span>`;
+                });
+
+                document.getElementById('note-body').innerHTML = contentWithTimestamps;
+                document.getElementById('page-title').innerText = "Anotação";
+                document.getElementById('nav-action').href = "notes.html";
+                document.getElementById('nav-action').innerHTML = '<i class="fas fa-chevron-left"></i> Ver todas';
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('note-render').style.display = 'block';
+
+            } catch (e) {
+                document.getElementById('loading').innerHTML = "<h1>Erro ao carregar nota. Verifique o nome do arquivo.</h1>";
+            }
+        }
+
+        function initYoutube(videoId) {
+            if (window.YT) { createPlayer(videoId); } else {
+                window.onYouTubeIframeAPIReady = () => createPlayer(videoId);
+                const tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                document.head.appendChild(tag);
+            }
+        }
+
+        function createPlayer(videoId) {
+            player = new YT.Player('youtube-player', {
+                height: '360',
+                width: '640',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'rel': 0,
+                    'enablejsapi': 1,
+                    'modestbranding': 1
+                },
+            });
+        }
+
+        window.seekVideo = (timeStr) => {
+            if (!player || !player.seekTo) return;
+            const parts = timeStr.split(':').reverse();
+            let seconds = 0;
+            if (parts[0]) seconds += parseInt(parts[0]); // seg
+            if (parts[1]) seconds += parseInt(parts[1]) * 60; // min
+            if (parts[2]) seconds += parseInt(parts[2]) * 3600; // hora
+
+            player.seekTo(seconds, true);
+            player.playVideo();
+            // Scroll suave para o topo para ver o vídeo sticky (conforme solicitado)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        init();
+    </script>
+</body>
+
+</html>
