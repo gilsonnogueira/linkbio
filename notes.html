@@ -140,81 +140,115 @@
             font-weight: 600;
         }
 
-        /* --- Customização do Markdown (Estilo Obsidian) --- */
+        /* --- Estilos Markdown --- */
         .markdown-rendered {
             padding-bottom: 100px;
+            color: var(--text-main);
+            width: 100%;
+            /* Garante que ocupa a largura disponível */
+            overflow-wrap: break-word;
+            /* Quebra palavras muito longas */
+            word-wrap: break-word;
+        }
+
+        .markdown-rendered img {
+            max-width: 100%;
+            /* Imagens nunca excedem a tela */
+            height: auto;
+            border-radius: 8px;
         }
 
         .markdown-rendered h1,
         .markdown-rendered h2,
-        .markdown-rendered h3 {
-            margin: 1.5em 0 0.5em;
+        .markdown-rendered h3,
+        .markdown-rendered h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
             color: #fff;
+            line-height: 1.2;
+        }
+
+        .markdown-rendered h1 {
+            font-size: 2em;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.3em;
+        }
+
+        .markdown-rendered h2 {
+            font-size: 1.5em;
         }
 
         .markdown-rendered p {
             margin-bottom: 1em;
+            line-height: 1.6;
         }
 
-        /* Timestamps */
-        .timestamp {
-            background: rgba(0, 243, 255, 0.15);
+        .markdown-rendered li {
+            margin-bottom: 0.5em;
+            margin-left: 20px;
+        }
+
+        .markdown-rendered a {
             color: var(--neon-blue);
-            padding: 2px 6px;
+            text-decoration: none;
+        }
+
+        .markdown-rendered a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-rendered strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .markdown-rendered code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 5px;
             border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            border-bottom: 2px solid var(--neon-blue);
-            transition: 0.2s;
+            font-family: monospace;
+            color: var(--neon-blue);
         }
 
-        .timestamp:hover {
-            background: var(--neon-blue);
-            color: #000;
-        }
-
-        /* Callouts (Estilo Obsidian Simplificado) */
-        .callout {
-            margin: 1em 0;
-            padding: 12px 16px;
+        .markdown-rendered pre {
+            background: #1e1e1e;
+            padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid var(--neon-blue);
-            background: rgba(255, 255, 255, 0.03);
+            overflow-x: auto;
+            margin: 1em 0;
+            border: 1px solid var(--card-border);
         }
 
-        .callout-title {
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        /* Adaptação para o vídeo flutuante (conforme video-pip.css) */
-        .video-wrapper {
-            width: 100%;
+        /* Container do Vídeo Sticky */
+        .sticky-video-wrapper {
+            position: sticky;
+            top: 90px;
+            z-index: 100;
+            background: rgba(18, 18, 18, 0.95);
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--neon-blue);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
             justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 0 0 12px 12px;
+            width: 100%;
         }
 
-        #loading {
-            text-align: center;
-            padding: 100px;
-            font-size: 1.2rem;
-            color: var(--text-muted);
+        .sticky-video-wrapper iframe {
+            max-width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Checkboxes */
-        input[type="checkbox"] {
-            accent-color: var(--neon-blue);
-            margin-right: 8px;
-        }
-
-        /* Ajuste do Iframe para o CSS do usuário */
-        .video-glass .markdown-preview-section>div {
-            /* Classe que o script vai injetar para ativar o sticky do video-pip.css */
+        @media (min-width: 769px) {
+            .sticky-video-wrapper iframe {
+                width: 640px;
+                max-height: 360px;
+            }
         }
     </style>
 </head>
@@ -222,7 +256,7 @@
 <body class="video-glass">
 
     <header>
-        <a href="index.html" id="nav-action" class="back-btn">
+        <a href="notes.html" id="nav-action" class="back-btn">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
         <div id="page-title">Anotações</div>
@@ -237,7 +271,7 @@
 
         <!-- Renderização da Nota -->
         <div id="note-render" class="markdown-rendered markdown-preview-view" style="display: none;">
-            <div id="video-anchor" class="markdown-preview-section"></div>
+            <div id="video-anchor"></div>
             <div id="note-body"></div>
         </div>
     </main>
@@ -247,7 +281,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const currentFile = urlParams.get('file');
 
-        // Configuração do Marked para suportar Callouts e Checkboxes
         marked.use({
             renderer: {
                 listitem(text, task, checked) {
@@ -296,6 +329,9 @@
 
                 document.getElementById('loading').style.display = 'none';
                 noteList.style.display = 'grid';
+                document.getElementById('page-title').innerText = "Anotações";
+                document.getElementById('nav-action').href = "index.html";
+                document.getElementById('nav-action').innerHTML = '<i class="fas fa-arrow-left"></i> Voltar';
             } catch (e) {
                 console.error(e);
                 document.getElementById('loading').innerHTML = "<h1>Erro ao conectar com o GitHub API. Verifique as configurações.</h1>";
@@ -306,23 +342,24 @@
             try {
                 document.getElementById('loading').style.display = 'flex';
 
-                // Usamos a URL RAW do GitHub para evitar problemas de encoding (acentos/espaços) que ocorrem em servidores estáticos
                 const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${encodeURIComponent(fileName)}`;
 
-                console.log("Tentando carregar nota de:", rawUrl); // Log para debug
-
                 const response = await fetch(rawUrl);
+                let text;
+
                 if (!response.ok) {
-                    // Fallback: Tenta buscar na raiz relativa caso o RAW falhe (ex: fork ou repo privado)
-                    console.log("Falha no RAW, tentando local...");
                     const localResponse = await fetch(encodeURIComponent(fileName));
-                    if (!localResponse.ok) throw new Error("Arquivo não encontrado nem no RAW nem localmente.");
-                    var text = await localResponse.text();
+                    if (!localResponse.ok) throw new Error("Arquivo não encontrado.");
+                    text = await localResponse.text();
                 } else {
-                    var text = await response.text();
+                    text = await response.text();
                 }
 
-                // 1. Processar Callouts [!INFO], [!ERROR], etc.
+                // 0. REMOVER FRONTMATTER (YAML)
+                // Remove qualquer coisa entre os primeiros ---, mesmo que haja quebras de linha antes
+                text = text.replace(/^\s*---[\s\S]*?---\s*/, '');
+
+                // 1. Processar Callouts
                 text = text.replace(/>\s?\[!(\w+)\](.*?)\n((?:>.*\n?)*)/g, (match, type, title, content) => {
                     const cleanContent = content.replace(/^>\s?/gm, '');
                     return `<div class="callout callout-${type.toLowerCase()}">
@@ -331,14 +368,18 @@
                     </div>`;
                 });
 
-                // 2. Extrair e Criar Iframe do YouTube (para o Sticky do video-pip.css)
+                // 2. Extrair e Criar Iframe do YouTube (Sticky Manual)
                 const ytMatch = text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+
+                const videoAnchor = document.getElementById('video-anchor');
+                videoAnchor.innerHTML = '';
+
                 if (ytMatch) {
                     const videoId = ytMatch[1];
-                    const videoDiv = document.createElement('div');
-                    // Esta estrutura atende o seletor do video-pip.css
-                    videoDiv.innerHTML = `<div id="youtube-player"></div>`;
-                    document.getElementById('video-anchor').appendChild(videoDiv);
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'sticky-video-wrapper';
+                    wrapper.innerHTML = `<div id="youtube-player"></div>`;
+                    videoAnchor.appendChild(wrapper);
 
                     initYoutube(videoId);
                 }
@@ -347,21 +388,24 @@
                 const html = marked.parse(text);
                 const purified = DOMPurify.sanitize(html);
 
-                // 4. Transformar timestamps (00:00 ou 0:00:00) em links clicáveis
+                // 4. Timestamps
                 const contentWithTimestamps = purified.replace(/\b(\d{1,2}:)?\d{1,2}:\d{2}\b/g, (match) => {
                     return `<span class="timestamp" onclick="seekVideo('${match}')">${match}</span>`;
                 });
 
                 document.getElementById('note-body').innerHTML = contentWithTimestamps;
-                document.getElementById('page-title').innerText = "Anotação";
-                document.getElementById('nav-action').href = "notes.html";
-                document.getElementById('nav-action').innerHTML = '<i class="fas fa-chevron-left"></i> Ver todas';
+                document.getElementById('page-title').innerText = fileName.replace('.md', '');
+
+                const navBtn = document.getElementById('nav-action');
+                navBtn.href = "notes.html";
+                navBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Ver todas';
 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('note-render').style.display = 'block';
 
             } catch (e) {
-                document.getElementById('loading').innerHTML = "<h1>Erro ao carregar nota. Verifique o nome do arquivo.</h1>";
+                console.error(e);
+                document.getElementById('loading').innerHTML = "<h1>Erro ao carregar nota.</h1>";
             }
         }
 
