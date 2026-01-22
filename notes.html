@@ -372,7 +372,10 @@
 
                 // 2. Extrair e Criar Iframe do YouTube (Sticky Manual)
                 // Regex ajustado para ser robusto com parametros extras (&source=...) e variações de URL
-                const ytMatch = text.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
+                // 2. Extrair e Criar Iframe do YouTube (Sticky Manual)
+                // Regex ajustado para ser robusto com parametros extras e variações de URL
+                const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/;
+                const ytMatch = text.match(ytRegex);
 
                 const videoAnchor = document.getElementById('video-anchor');
                 videoAnchor.innerHTML = '';
@@ -385,6 +388,10 @@
                     videoAnchor.appendChild(wrapper);
 
                     initYoutube(videoId);
+
+                    // REMOVER O LINK DO VIDEO DO TEXTO PARA NÃO DUPLICAR VISUALMENTE
+                    // Remove a linha inteira que contém o ID do vídeo
+                    text = text.replace(new RegExp(`^.*${videoId}.*$`, 'mg'), '');
                 }
 
                 // 3. Renderizar Markdown principal
