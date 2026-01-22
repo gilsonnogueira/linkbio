@@ -282,6 +282,8 @@
         const currentFile = urlParams.get('file');
 
         marked.use({
+            breaks: true, // Habilita quebras de linha como <br>
+            gfm: true,    // GitHub Flavored Markdown
             renderer: {
                 listitem(text, task, checked) {
                     if (task) {
